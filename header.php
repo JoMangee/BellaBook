@@ -23,5 +23,5 @@
 
 <div id="container">
 
-<p id="topnav"><a href="sign.php">Sign the Guestbook</a> | <a href="index.php">View the Signatures</a></p>
+<p id="topnav"><a href="sign.php">Sign the Open Letter</a> | <a href="index.php">View the Signatures</a></p>
 
