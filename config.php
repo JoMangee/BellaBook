@@ -52,7 +52,7 @@ function doAdminHeader() {
 	<body>
 
 	<div id="container">
-	<p id="topnav"><a href="index.php">View the Signatures</a> &middot; <a href="admin.php">Admin Main</a> &middot; <a href="logout.php">Logout</a></p>
+	<p id="topnav"><a href="index.php">View the Entries</a> &middot; <a href="admin.php">Admin Main</a> &middot; <a href="logout.php">Logout</a></p>
 <?php
 }
 function doAdminFooter() {
