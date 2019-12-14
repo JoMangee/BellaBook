@@ -103,6 +103,8 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 	
 	if (strpos($_POST['comments'], "http://") !== false || strpos($_POST['comments'], "www.") !== false) # even if links are enabled we don't want too many
 		$points += 2;
+	if (strpos($_POST['comments'], "https://") !== false ) # even if links are enabled we don't want too many
+		$points += 2;
 	if (isset($_POST['human']))
 		$points += 2;
 	if (preg_match("/(<.*>)/i", $_POST['comments'])) # html in a comment is a good indicator of spam
@@ -118,7 +120,7 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 	// do some final checks 
 	if (empty($_POST['name']) || !preg_match("/^[a-zA-Z-'\s]*$/", stripslashes($_POST['name'])))
 		$error_msg .= "The name field must not be blank, must not contain special characters.\r\n";
-	if (!empty($_POST['email']) && !preg_match('/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+' . '(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/i', strtolower($_POST['email'])))
+	if (!empty($_POST['email']) && !preg_match('/^([a-z0-9])(([-a-z0-9._\+])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+' . '(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/i', strtolower($_POST['email'])))
 		$error_msg .= "That is not a valid e-mail address.\r\n";
 	if (!empty($_POST['url']) && $_POST['url'] != 'http://' && !preg_match('/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i', $_POST['url']))
 		$error_msg .= "Invalid website url.\r\n";
