@@ -52,7 +52,7 @@ function doAdminHeader() {
 	<body>
 
 	<div id="container">
-	<p id="topnav"><a href="index.php">View the Guestbook</a> &middot; <a href="admin.php">Admin Main</a> &middot; <a href="logout.php">Logout</a></p>
+	<p id="topnav"><a href="index.php">View the Signatures</a> &middot; <a href="admin.php">Admin Main</a> &middot; <a href="logout.php">Logout</a></p>
 <?php
 }
 function doAdminFooter() {
@@ -106,10 +106,10 @@ function sign_gbook($file, $entry) {
 	doWrite($file, $entry, "w"); // write the new data
 	doWrite($file, $oldData, "a"); // append the old data
 
-	echo "<p>Thank you for signing the guestbook.</p>";
+	echo "<p>Thank you for signing the open letter.</p>";
 
 	if ($file === TEMPENTRIES)
-		echo "<p>Moderation is enabled, the guestbook owner will have to approve your message before it appears.</p>";
+		echo "<p>Moderation is enabled, the open letter owner will have to approve your message before it appears.</p>";
 }
 
 function emoticonise($message) {

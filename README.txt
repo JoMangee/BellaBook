@@ -37,6 +37,9 @@ That's it, you're ready to go!
 //--------------------
 // CHANGELOG
 //--------------------
+Changes for implementation - JB 2019-12-15
+
+
 New features/fixes in version 3.8
 
 1. Better spam protection in sign.php taken from Jem's Mail Form

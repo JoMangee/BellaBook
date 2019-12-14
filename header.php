@@ -13,7 +13,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="description" content="Basic guestbook script provided by BellaBook" />
+<meta name="description" content="Open letter script based on guestbook provided by BellaBook" />
 
 <link href="<?php echo $stylecolor; ?>-stylesheet.css" rel="stylesheet" type="text/css" />
 <title><?php echo $title; ?> <?php if (isset($_GET['page']) && is_numeric($_GET['page'])) echo '| Page '. (int)$_GET['page']; ?> - Powered by BellaBook</title>
@@ -23,5 +23,5 @@
 
 <div id="container">
 
-<p id="topnav"><a href="sign.php">Sign the Guestbook</a> | <a href="index.php">View the Guestbook</a></p>
+<p id="topnav"><a href="sign.php">Sign the Guestbook</a> | <a href="index.php">View the Signatures</a></p>
 

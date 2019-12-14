@@ -50,13 +50,13 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 		$open2check = file(ENTRIES);
 		$expodelineone = explode(",", $open2check['0']);
 			if ($_SERVER['REMOTE_ADDR'] == $expodelineone['4'])	{
-				echo "<p>Sorry, you can't sign the guestbook twice in a row.</p>";
+				echo "<p>Sorry, you can't sign the open letter twice in a row.</p>";
 				exit(include('footer.php'));
 			}
 	}
 	
 	if (!preg_match($ipPattern, $_SERVER['REMOTE_ADDR']) || (isset($iplist) && preg_match($iplist, $_SERVER['REMOTE_ADDR']))) {
-		echo "<p>Your IP ({$_SERVER['REMOTE_ADDR']}) is not valid or it has been banned, you cannot sign the guestbook.</p>\n\n";
+		echo "<p>Your IP ({$_SERVER['REMOTE_ADDR']}) is not valid or it has been banned, you cannot sign the open letter.</p>\n\n";
 		exit(include('footer.php'));
 	}
 
@@ -140,7 +140,7 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 		$signdate = date("Y-m-d H:i:s");
 
 		if ($emailentries == "yes") {
-			$subject = "New entry in guestbook ($title)";
+			$subject = "New entry in open letter ($title)";
 
 			$message  = "Name: ".$c['name']." \r\n";
 			$message .= "E-mail: ".$c['email']." \r\n";
@@ -153,7 +153,7 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 			$message .= "Referrer: ".$_SERVER['HTTP_REFERER']." \r\n";
 			$message .= "Admin Panel: ".$admin_gburl."/admin.php \r\n";
 
-			if ($moderate == "yes") $message .= "\r\nYou will need to approve this entry for it to appear in your guestbook.";
+			if ($moderate == "yes") $message .= "\r\nYou will need to approve this entry for it to appear in your open letter.";
 
 			$headers = "From: ".$title." <$admin_email> \r\nReply-To: <$email>";
 			mail($admin_email,$subject,$message,$headers);
