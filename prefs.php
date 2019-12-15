@@ -13,7 +13,7 @@ $title = "My BellaBook Guestbook"; // set your guestbook title here
 
 $admin_name	= "admin";   // admin username
 $admin_pass	= "password";   // admin password
-$admin_email = "you@your-domain.com";   // admin e-mail address
+$admin_email = "youATyour-domain.com";   // admin e-mail address
 $admin_url = "http://your-website.com";   // your website url - used in guestbook footer
 $admin_gburl = "http://your-website.com/bellabook";   // your guestbook url - used in the sign notification emails
 $admin_sitename = "my site";   // your website name - used in guestbook footer
