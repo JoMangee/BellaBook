@@ -13,7 +13,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="description" content="Open letter script based on guestbook provided by BellaBook" />
+<meta name="description" content="Protect Suzie by Co-signing the Open Letter at ProtectSuzie.com" />
 
 <link type="text/css" rel="stylesheet" href="../css/style.css" />
 <link href="<?php echo $stylecolor; ?>-stylesheet.css" rel="stylesheet" type="text/css" />
