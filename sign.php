@@ -138,6 +138,7 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 		$c['name'] = ucwords(strtolower($c['name']));
 		$c['email'] = strtolower($c['email']);
 		$c['comments'] = str_replace("<br /><br /><br /><br />", "<br /><br />", preg_replace("/,(?! )/", ", ", preg_replace("([\r\n])", "<br />", $c['comments'])));
+		$c['comments'] = str_replace("\"","'", $c['comments']); // double quotes trip things up - replace with single
 		
 		$signdate = date("Y-m-d H:i:s");
 
