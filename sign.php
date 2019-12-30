@@ -105,6 +105,8 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 		$points += 2;
 	if (strpos($_POST['comments'], "https://") !== false ) # even if links are enabled we don't want too many
 		$points += 2;
+  if (strpos($_POST['name'], " ") !== true ) # most of the spam entries don't use full name e.g. good ones have a space
+		$points += 2;
 	if (isset($_POST['human']))
 		$points += 2;
 	if (preg_match("/(<.*>)/i", $_POST['comments'])) # html in a comment is a good indicator of spam
