@@ -109,7 +109,7 @@ function sign_gbook($file, $entry) {
 	echo "<p>Thank you for signing the open letter.</p>";
 
 	if ($file === TEMPENTRIES)
-		echo "<p>Moderation is enabled, the open letter owner will have to approve your message before it appears.</p>";
+		echo "<p>Moderation is enabled, the open letter owner will have to approve your message before it appears. This may take a few days, so check back later.</p>";
 }
 
 function emoticonise($message) {
