@@ -156,6 +156,7 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 			$message .= "IP: ".$_SERVER['REMOTE_ADDR']." \r\n";
 			$message .= "Browser: ".$_SERVER['HTTP_USER_AGENT']." \r\n";
 			$message .= "Referrer: ".$_SERVER['HTTP_REFERER']." \r\n";
+			$message .= "Spam points: ".$points." \r\n";
 			$message .= "Admin Panel: ".$admin_gburl."/admin.php \r\n";
 
 			if ($moderate == "yes") $message .= "\r\nYou will need to approve this entry for it to appear in your open letter.";
