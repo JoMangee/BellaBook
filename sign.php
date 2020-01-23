@@ -106,7 +106,7 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 	if (strpos($_POST['comments'], "https://") !== false ) # even if links are enabled we don't want too many
 		$points += 2;
   if (strpos($_POST['name'], " ") !== true ) # most of the spam entries don't use full name e.g. good ones have a space
-		$points += 2;
+		$points += 3;
 	if (isset($_POST['human']))
 		$points += 2;
 	if (preg_match("/(<.*>)/i", $_POST['comments'])) # html in a comment is a good indicator of spam
@@ -170,6 +170,7 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 		if ($moderate == "yes") sign_gbook(TEMPENTRIES, $entryformat);
 		else sign_gbook(ENTRIES, $entryformat);
 	}
+	$error_msg .= "Sorry, we think this could be spam.";
 }
 if (!isset($_POST['submit']) || $show_form == true) {
 	require_once('config.php');
