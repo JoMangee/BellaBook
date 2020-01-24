@@ -18,7 +18,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>'; ?>
 			<description><?php echo $admin_sitename; ?>'s open letter feed</description>
 			<language>en-gb</language>
 <?php
-			$blah = file($entriesfile);
+			$blah = file(ENTRIES);
 			$i = 0;
 			$limit = (count($blah) > 10) ? 10 : count($blah);
 			while ($i<$limit){
