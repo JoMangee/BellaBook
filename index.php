@@ -80,7 +80,7 @@ if(!fopen(ENTRIES, "r")) {
 				<td class="meta">
 					<img src="user.gif" alt="" /> <span class="bold">Name:</span> <?php echo $name; ?><br />
 					<?php echo $email; ?>
-					<img src="www.gif" alt="" /> <span class="bold">Website:</span> <?php echo $url; ?><br />
+					<?php if ($showwebsites == "yes") { ?><img src="www.gif" alt="" /> <span class="bold">Website:</span> <?php echo $url; ?><br /><?php } ?>
 					<img src="date.gif" alt="" /> <span class="bold">Date:</span> <?php echo $date; ?><br />
 				</td>
 				<td>

@@ -22,6 +22,7 @@ $secret = "pleasechangeme";    // this is like a second password. you won't have
 $dateformat	= "d M y h:ia";   // date format, more details: php.net/date
 $stylecolor	= "bigblue";   // bellabook theme (download more from jemjabella.co.uk/scripts)
 
+$showwebsites = "no";  // hide websites to reduce spam links - write yes or no
 $showemail = "yes";   // show email addresses in guestbook - write yes or no
 $emailentries = "no";   // email new entries - write yes or no ($admin_email must be filled in, above)
 
