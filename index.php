@@ -28,7 +28,7 @@ if(!fopen(ENTRIES, "r")) {
 		if ($perpage < $count) {
 			if ($pg > 1 && $pg <= $numpages) {
 				$prev = $pg - 1;
-				echo '<a href="index.php?page='.$prev.'">Prev</a> &middot; ';
+				echo '<a rel="prev" href="index.php?page='.$prev.'">Prev</a> &middot; ';
 			} else {
 				echo "Prev &middot; ";
 			}
@@ -40,7 +40,7 @@ if(!fopen(ENTRIES, "r")) {
 			
 			if ($pg < $numpages) {
 				$next = $pg + 1;
-				echo ' &middot; <a href="index.php?page='.$next.'">Next</a>';
+				echo ' &middot; <a rel="next" href="index.php?page='.$next.'">Next</a>';
 			} else {
 				echo " &middot; Next";
 			}
