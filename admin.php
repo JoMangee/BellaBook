@@ -11,12 +11,16 @@
 require_once('config.php');
 
 if (isset($_COOKIE['bellabook'])) {
-	if ($_COOKIE['bellabook'] == md5($admin_pass.$secret)) {
+	// Security: Use SHA256 instead of MD5
+	if ($_COOKIE['bellabook'] == hash('sha256', $admin_pass.$secret.session_id())) {
 		if (isset($_GET['p'])) $page = $_GET['p'];
 		else $page = NULL;
 		
-		if (!isset($_GET['file']) || (isset($_GET['file']) && ($_GET['file'] != "entries.txt" && $_GET['file'] != "tempentries.txt")))
+		// Security: Strict file validation to prevent path traversal
+		$allowed_files = array("entries.txt", "tempentries.txt");
+		if (!isset($_GET['file']) || !in_array($_GET['file'], $allowed_files, true) || strpos($_GET['file'], '..') !== false || strpos($_GET['file'], '/') !== false || strpos($_GET['file'], '\\') !== false) {
 			$_GET['file'] = null;
+		}
 		
 		doAdminHeader();
 		switch($page) {
@@ -50,6 +54,13 @@ if (isset($_COOKIE['bellabook'])) {
 				<form action="admin.php?p=appentries" method="post">
 				<table>
 <?php
+				// Security: Generate stronger CSRF token per session
+				if (session_status() == PHP_SESSION_NONE) session_start();
+				if (!isset($_SESSION['csrf_token'])) {
+					$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+				}
+				$csrf_token = hash('sha256', $_SESSION['csrf_token'].$secret);
+				
 				while ($i < $end) {
 					list($name,$email,$url,$date,$ip,$message) = preg_split("/,(?! )/", $entries[$i]);
 					
@@ -59,13 +70,13 @@ if (isset($_COOKIE['bellabook'])) {
 ?>
 					<tr>
 						<td>
-							<input type="hidden" name="hashy" id="hashy" value="<?php echo md5(date("H").$secret); ?>">
+							<input type="hidden" name="hashy" id="hashy" value="<?php echo $csrf_token; ?>">
 
-							<strong>Name:</strong> <?php echo $name; ?><br>
-							<strong>E-mail:</strong> <a href="mailto:<?php echo $email; ?>"><?php echo $email; ?></a><br>
-							<strong>www:</strong> <a href="<?php echo $url; ?>"><?php echo $sitename; ?></a><br>
-							<strong>Date:</strong> <?php echo date($dateformat, strtotime($date)); ?><br>
-							<strong>IP:</strong> <a href="http://www.geobytes.com/IpLocator.htm?GetLocation&amp;ipaddress=<?php echo $ip; ?>"><?php echo $ip; ?></a><br>
+							<strong>Name:</strong> <?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?><br>
+							<strong>E-mail:</strong> <a href="mailto:<?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?></a><br>
+							<strong>www:</strong> <a href="<?php echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($sitename, ENT_QUOTES, 'UTF-8'); ?></a><br>
+							<strong>Date:</strong> <?php echo htmlspecialchars(date($dateformat, strtotime($date)), ENT_QUOTES, 'UTF-8'); ?><br>
+							<strong>IP:</strong> <a href="http://www.geobytes.com/IpLocator.htm?GetLocation&amp;ipaddress=<?php echo urlencode($ip); ?>"><?php echo htmlspecialchars($ip, ENT_QUOTES, 'UTF-8'); ?></a><br>
 							<br>
 							<a href="admin.php?p=editentry&amp;entry=<?php echo $i; ?>&amp;file=<?php echo $_GET['file']; ?>">Edit Entry</a><br>
 							<a href="admin.php?p=delentry&amp;entry=<?php echo $i; ?>&amp;file=<?php echo $_GET['file']; ?>" onclick="javascript:return confirm('Are you sure you want to delete this entry?')">Delete Entry</a><br>
@@ -74,7 +85,7 @@ if (isset($_COOKIE['bellabook'])) {
 							<?php endif; ?>
 						</td>
 						<td>
-							<?php echo $message; ?>
+							<?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?>
 						</td>
 					</tr>
 <?php
@@ -92,7 +103,9 @@ if (isset($_COOKIE['bellabook'])) {
 			}
 		break;
 		case "appentries":
-			if (!isset($_POST['hashy']) || $_POST['hashy'] != md5(date("H").$secret)) exit("<p>Invalid hashy token.</p>");
+			// Security: Validate CSRF token from session
+			if (session_status() == PHP_SESSION_NONE) session_start();
+			if (!isset($_POST['hashy']) || !isset($_SESSION['csrf_token']) || $_POST['hashy'] != hash('sha256', $_SESSION['csrf_token'].$secret)) exit("<p>Invalid CSRF token.</p>");
 			
 			if (isset($_POST['appr']) && is_array($_POST['appr'])) {
 				$pending = file(TEMPENTRIES);
@@ -215,7 +228,7 @@ if (isset($_COOKIE['bellabook'])) {
 <?php
 				$spamwords = file(SPAMWDS);
 				foreach ($spamwords as $word)
-					echo '<input type="text" name="spamwd[]" value="'.$word.'"><br>';
+					echo '<input type="text" name="spamwd[]" value="'.htmlspecialchars(trim($word), ENT_QUOTES, 'UTF-8').'"s><br>';
 ?>
 				<input type="submit" name="submit" id="submit" value="Update">
 			</p>
@@ -298,11 +311,13 @@ if (isset($_GET['p']) && $_GET['p'] == "login") {
 		doAdminFooter();
 		exit;
 	} else if ($_POST['name'] == $admin_name && $_POST['pass'] == $admin_pass) {
-		setcookie('bellabook', md5($_POST['pass'].$secret), time()+(31*86400));
+		// Security: Start session and use SHA256 with secure cookie flags
+		if (session_status() == PHP_SESSION_NONE) session_start();
+		setcookie('bellabook', hash('sha256', $_POST['pass'].$secret.session_id()), time()+(31*86400), '/', '', isset($_SERVER['HTTPS']), true);
 		header("Location: admin.php");
 		exit;
 	} else {
-		setcookie('bellabook', NULL, NULL);
+		setcookie('bellabook', '', time()-3600, '/', '', isset($_SERVER['HTTPS']), true);
 		header("Location: admin.php");
 		exit;
 	}

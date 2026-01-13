@@ -60,6 +60,10 @@ if(!fopen(ENTRIES, "r")) {
 			$date = date($dateformat, strtotime($odate));
 			$message = trim(stripslashes($message), "\"\x00..\x1F");
 			
+			// Security: Escape output to prevent XSS
+			$name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+			$url_safe = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+			
 			if ($showemail == "yes") {
 				// this bit of javascript prevents the email address being picked up by bots... in theory
 				$email = "<img src=\"email.gif\" alt=\"\" /> <span class=\"bold\">E-mail:</span> 
@@ -72,7 +76,7 @@ if(!fopen(ENTRIES, "r")) {
 			} else {
 				$email = NULL;
 			}
-			if (empty($url) || $url == "http://") $url = "n/a"; else $url = "<a href=\"$url\" title=\"$name's website\">www</a>";
+			if (empty($url) || $url == "http://") $url = "n/a"; else $url = "<a href=\"".$url_safe."\" title=\"".$name."'s website\">www</a>";
 			$rowColour = $i % 2;
 ?>
 
@@ -81,10 +85,10 @@ if(!fopen(ENTRIES, "r")) {
 					<img src="user.gif" alt="" /> <span class="bold">Name:</span> <?php echo $name; ?><br />
 					<?php echo $email; ?>
 					<?php if ($showwebsites == "yes") { ?><img src="www.gif" alt="" /> <span class="bold">Website:</span> <?php echo $url; ?><br /><?php } ?>
-					<img src="date.gif" alt="" /> <span class="bold">Date:</span> <?php echo $date; ?><br />
+					<img src="date.gif" alt="" /> <span class="bold">Date:</span> <?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?><br />
 				</td>
 				<td>
-					<?php echo emoticonise(linebreaker($message)); ?>
+					<?php echo emoticonise(linebreaker(htmlspecialchars($message, ENT_QUOTES, 'UTF-8'))); ?>
 				</td>
 			</tr>
 <?php

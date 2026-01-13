@@ -9,7 +9,9 @@
 //-----------------------------------------------------------------------------
 
 if (isset($_COOKIE['bellabook'])) {
-	setcookie('bellabook', "");
+	if (session_status() == PHP_SESSION_NONE) session_start();
+	session_destroy();
+	setcookie('bellabook', '', time()-3600, '/', '', isset($_SERVER['HTTPS']), true);
 	header("Location: logout.php");
 	exit;
 }

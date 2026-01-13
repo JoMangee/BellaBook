@@ -169,8 +169,12 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 
 		if ($moderate == "yes") sign_gbook(TEMPENTRIES, $entryformat);
 		else sign_gbook(ENTRIES, $entryformat);
+	} else {
+		// Entry rejected due to spam score or validation errors
+		if ($points > $maxPoints) {
+			$error_msg .= "Sorry, we think this could be spam.";
+		}
 	}
-	$error_msg .= "Sorry, we think this could be spam.";
 }
 if (!isset($_POST['submit']) || $show_form == true) {
 	require_once('config.php');
