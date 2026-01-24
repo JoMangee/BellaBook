@@ -1,0 +1,46 @@
+BellaBook Security Patches - Package Index
+============================================
+
+Location: c:\Data\web\BellaBook\
+
+📋 START HERE:
+  └─ PATCH-PACKAGE-SUMMARY.txt       Quick overview of what's included
+
+📖 DOCUMENTATION (Read these):
+  ├─ README-SECURITY-PATCHES.md      How to apply patches and create PR
+  ├─ BELLABOOK-SECURITY-PATCH.md    Detailed technical documentation
+  └─ SECURITY_FIXES.md               Additional security analysis
+
+🔧 APPLY PATCHES:
+  └─ bellabook-security.patch        Unified diff - use with: git apply
+
+✅ VERIFY PATCHES:
+  └─ bellabook-security-test.sh      Test script to verify patch applied
+
+---
+
+QUICK START:
+
+1. Read: PATCH-PACKAGE-SUMMARY.txt
+2. Apply: git apply bellabook-security.patch
+3. Verify: bash bellabook-security-test.sh
+4. Test: Follow testing checklist in BELLABOOK-SECURITY-PATCH.md
+5. Submit: Follow PR instructions in README-SECURITY-PATCHES.md
+
+---
+
+SECURITY FIXES INCLUDED:
+
+✓ SHA256 password hashing (upgraded from MD5)
+✓ XSS protection via output escaping  
+✓ Path traversal prevention
+✓ Better error handling with require_once()
+
+TARGET REPOSITORIES:
+
+- https://github.com/jemjabella/BellaBook (official upstream)
+- https://github.com/JoMangee/BellaBook/tree/openletter (openletter fork)
+
+---
+
+Questions? See BELLABOOK-SECURITY-PATCH.md for detailed explanations.

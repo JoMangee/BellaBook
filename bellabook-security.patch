@@ -1,0 +1,31 @@
+--- admin.php.orig	2016-01-01 00:00:00.000000000 +0000
++++ admin.php	2026-01-24 00:00:00.000000000 +0000
+@@ -10,7 +10,7 @@
+ //-----------------------------------------------------------------------------
+ 
+-@require('config.php');
++require_once('config.php');
+ 
+ if (isset($_COOKIE['bellabook'])) {
+-	if ($_COOKIE['bellabook'] == md5($admin_pass.$secret)) {
++	if ($_COOKIE['bellabook'] == hash('sha256', $admin_pass.$secret)) {
+ 		if (isset($_GET['p'])) $page = $_GET['p'];
+ 		else $page = NULL;
+ 
+-		if (!isset($_GET['file']) || (isset($_GET['file']) && ($_GET['file'] != "entries.txt" && $_GET['file'] != "tempentries.txt")))
++		// Security: Strict file validation to prevent path traversal
++		$allowed_files = array("entries.txt", "tempentries.txt");
++		if (!isset($_GET['file']) || !in_array($_GET['file'], $allowed_files, true) || strpos($_GET['file'], '..') !== false || strpos($_GET['file'], '/') !== false || strpos($_GET['file'], '\\') !== false) {
+ 			$_GET['file'] = null;
++		}
+ 
+ 		doAdminHeader();
+@@ -250,7 +255,7 @@
+ 
+ 	if(isset($_POST['submit'])){
+ 		if(isset($_POST['pass']) && $_POST['pass'] == $admin_pass) {
+-			setcookie('bellabook', md5($admin_pass.$secret), time()+(31*86400), '/');
++			setcookie('bellabook', hash('sha256', $admin_pass.$secret), time()+(31*86400), '/');
+ 			doAdminHeader();
+ 		}
+ 		else {
