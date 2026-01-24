@@ -1,6 +1,6 @@
 <?php
 //-----------------------------------------------------------------------------
-// BellaBook Copyright © Jem Turner 2004-2007,2008 unless otherwise noted
+// BellaBook Copyright Â© Jem Turner 2004-2007,2008 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -9,7 +9,9 @@
 //-----------------------------------------------------------------------------
 
 if (isset($_COOKIE['bellabook'])) {
-	setcookie('bellabook', "");
+	if (session_status() == PHP_SESSION_NONE) session_start();
+	session_destroy();
+	setcookie('bellabook', '', time()-3600, '/', '', isset($_SERVER['HTTPS']), true);
 	header("Location: logout.php");
 	exit;
 }

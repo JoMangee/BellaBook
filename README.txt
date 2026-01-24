@@ -1,7 +1,7 @@
 //--------------------
 // READ ME
 //--------------------
-BellaBook3.7 Copyright © Jem Turner 2004-2007,2008
+BellaBook3.8 Copyright Â© Jem Turner 2004-2007,2008,2013
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,6 +37,19 @@ That's it, you're ready to go!
 //--------------------
 // CHANGELOG
 //--------------------
+Changes for implementation - JB 2019-12-15
+- Changed mentions of guestbook and enteries to open letter and signatures
+- Added protectsuz Stylesheet
+- Integrated styles and structure for https://protectsuzie.com/openletter
+
+New features/fixes in version 3.8
+
+1. Better spam protection in sign.php taken from Jem's Mail Form
+2. Improved titles to fix Google Webmaster Tools warnings
+3. Changed buffer size to unbuffered to hopefully curb file truncation
+4. All files now UTF-8 without BOM to improve foreign language support
+
+
 New features/fixes in version 3.7
 
 1. Correct a regex error in sign.php/admin.php
@@ -123,6 +136,7 @@ Amelie	- not-noticeably.net (comprehensive bug testing)
 Katy	- cathode-ray-coma.co.uk (bug testing + pagination!)
 Jim		- fewl.net (original testing + security advice)
 Dieter	- worldofbelushi.de (security brainstorming)
+Dave	- thebritishbeardclub.org (bug reporting, ideas in 3.8)
 
 
 Smilies and icons from:

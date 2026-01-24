@@ -1,6 +1,6 @@
 <?php
 //-----------------------------------------------------------------------------
-// BellaBook Copyright © Jem Turner 2004-2007,2008 unless otherwise noted
+// BellaBook Copyright Â© Jem Turner 2004-2007,2008 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -15,10 +15,10 @@ echo '<?xml version="1.0" encoding="utf-8"?>'; ?>
 		<channel>
 			<title><?php echo $title; ?></title>
 			<link><?php echo $admin_url; ?></link>
-			<description><?php echo $admin_sitename; ?>'s guestbook feed</description>
+			<description><?php echo $admin_sitename; ?>'s open letter feed</description>
 			<language>en-gb</language>
 <?php
-			$blah = file($entriesfile);
+			$blah = file(ENTRIES);
 			$i = 0;
 			$limit = (count($blah) > 10) ? 10 : count($blah);
 			while ($i<$limit){
@@ -29,7 +29,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>'; ?>
 				$message = trim(stripslashes($message), "\"\x00..\x1F");
 		
 				echo "<item>\n";
-					echo "<title>guestbook entry</title>\n";
+					echo "<title>open letter entry</title>\n";
 					echo "<link>$admin_url</link>\n";
 					echo "<pubDate>$date</pubDate>\n";
 					echo "<description><![CDATA[$message]]></description>\n";

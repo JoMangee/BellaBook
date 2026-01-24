@@ -28,7 +28,7 @@ if(!fopen(ENTRIES, "r")) {
 		if ($perpage < $count) {
 			if ($pg > 1 && $pg <= $numpages) {
 				$prev = $pg - 1;
-				echo '<a href="index.php?page='.$prev.'">Prev</a> &middot; ';
+				echo '<a rel="prev" href="index.php?page='.$prev.'">Prev</a> &middot; ';
 			} else {
 				echo "Prev &middot; ";
 			}
@@ -40,7 +40,7 @@ if(!fopen(ENTRIES, "r")) {
 			
 			if ($pg < $numpages) {
 				$next = $pg + 1;
-				echo ' &middot; <a href="index.php?page='.$next.'">Next</a>';
+				echo ' &middot; <a rel="next" href="index.php?page='.$next.'">Next</a>';
 			} else {
 				echo " &middot; Next";
 			}
@@ -60,6 +60,10 @@ if(!fopen(ENTRIES, "r")) {
 			$date = date($dateformat, strtotime($odate));
 			$message = trim(stripslashes($message), "\"\x00..\x1F");
 			
+			// Security: Escape output to prevent XSS
+			$name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+			$url_safe = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+			
 			if ($showemail == "yes") {
 				// this bit of javascript prevents the email address being picked up by bots... in theory
 				$email = "<img src=\"email.gif\" alt=\"\" /> <span class=\"bold\">E-mail:</span> 
@@ -72,7 +76,7 @@ if(!fopen(ENTRIES, "r")) {
 			} else {
 				$email = NULL;
 			}
-			if (empty($url) || $url == "http://") $url = "n/a"; else $url = "<a href=\"$url\" title=\"$name's website\">www</a>";
+			if (empty($url) || $url == "http://") $url = "n/a"; else $url = "<a href=\"".$url_safe."\" title=\"".$name."'s website\">www</a>";
 			$rowColour = $i % 2;
 ?>
 
@@ -80,7 +84,7 @@ if(!fopen(ENTRIES, "r")) {
 				<td class="meta">
 					<img src="user.gif" alt="" /> <span class="bold">Name:</span> <?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?><br />
 					<?php echo $email; ?>
-					<img src="www.gif" alt="" /> <span class="bold">Website:</span> <?php echo $url; ?><br />
+					<?php if ($showwebsites == "yes") { ?><img src="www.gif" alt="" /> <span class="bold">Website:</span> <?php echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8'); ?><br /><?php } ?>
 					<img src="date.gif" alt="" /> <span class="bold">Date:</span> <?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?><br />
 				</td>
 				<td>

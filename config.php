@@ -1,6 +1,6 @@
 <?php
 //-----------------------------------------------------------------------------
-// BellaBook Copyright © Jem Turner 2004-2007,2008 unless otherwise noted
+// BellaBook Copyright Â© Jem Turner 2004-2007,2008 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -52,7 +52,7 @@ function doAdminHeader() {
 	<body>
 
 	<div id="container">
-	<p id="topnav"><a href="index.php">View the Guestbook</a> &middot; <a href="admin.php">Admin Main</a> &middot; <a href="logout.php">Logout</a></p>
+	<p id="topnav"><a href="index.php">View the Entries</a> &middot; <a href="admin.php">Admin Main</a> &middot; <a href="logout.php">Logout</a></p>
 <?php
 }
 function doAdminFooter() {
@@ -76,6 +76,7 @@ function blanklinefix($inputfile) {
 	
 		$fl = fopen($inputfile, "w+");
 		if (flock($fl, LOCK_EX)) {
+			stream_set_write_buffer($fl, 0);
 			fwrite($fl, $newContent);
 			flock($fl, LOCK_UN);
 		} else {
@@ -89,6 +90,7 @@ function blanklinefix($inputfile) {
 function doWrite($file2open, $data, $writetype) {
 	$file = fopen($file2open, $writetype) or die("ERROR: could not open ".$file2open);
 	if (flock($file, LOCK_EX)) {
+		stream_set_write_buffer($file, 0);
 		fwrite($file, $data);
 		flock($file, LOCK_UN);
 	} else {
@@ -104,10 +106,10 @@ function sign_gbook($file, $entry) {
 	doWrite($file, $entry, "w"); // write the new data
 	doWrite($file, $oldData, "a"); // append the old data
 
-	echo "<p>Thank you for signing the guestbook.</p>";
+	echo "<p>Thank you for signing the open letter.</p>";
 
 	if ($file === TEMPENTRIES)
-		echo "<p>Moderation is enabled, the guestbook owner will have to approve your message before it appears.</p>";
+		echo "<p>Moderation is enabled, the open letter owner will have to approve your message before it appears. This may take a few days, so check back later.</p>";
 }
 
 function emoticonise($message) {
