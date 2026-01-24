@@ -82,9 +82,9 @@ if(!fopen(ENTRIES, "r")) {
 
 			<tr class="rowcolor<?php echo $rowColour; ?>">
 				<td class="meta">
-					<img src="user.gif" alt="" /> <span class="bold">Name:</span> <?php echo $name; ?><br />
+					<img src="user.gif" alt="" /> <span class="bold">Name:</span> <?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?><br />
 					<?php echo $email; ?>
-					<?php if ($showwebsites == "yes") { ?><img src="www.gif" alt="" /> <span class="bold">Website:</span> <?php echo $url; ?><br /><?php } ?>
+					<?php if ($showwebsites == "yes") { ?><img src="www.gif" alt="" /> <span class="bold">Website:</span> <?php echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8'); ?><br /><?php } ?>
 					<img src="date.gif" alt="" /> <span class="bold">Date:</span> <?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?><br />
 				</td>
 				<td>
