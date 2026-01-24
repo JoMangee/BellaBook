@@ -33,6 +33,15 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 	}
 	include('header.php');
 
+	// Strip links to plain text placeholders for offline review
+	function strip_links_to_text($text) {
+		return preg_replace_callback('/https?:\/\/[^\s]+/i', function ($match) {
+			$parsed = parse_url($match[0]);
+			$host = isset($parsed['host']) ? preg_replace('/^www\./i', '', $parsed['host']) : 'link';
+			return '[link: '.$host.' (text only)]';
+		}, $text);
+	}
+
 	// let's do some pattern matching on the IP to make sure this visitor is legit, not banned and not flooding
 	$ipPattern = '/\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/i';
 	
@@ -50,23 +59,22 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 		$open2check = file(ENTRIES);
 		$expodelineone = explode(",", $open2check['0']);
 			if ($_SERVER['REMOTE_ADDR'] == $expodelineone['4'])	{
-				echo "<p>Sorry, you can't sign the open letter twice in a row.</p>";
+				echo "<p>Sorry, you can't post twice in a row.</p>";
 				exit(include('footer.php'));
 			}
 	}
 	
 	if (!preg_match($ipPattern, $_SERVER['REMOTE_ADDR']) || (isset($iplist) && preg_match($iplist, $_SERVER['REMOTE_ADDR']))) {
-		echo "<p>Your IP ({$_SERVER['REMOTE_ADDR']}) is not valid or it has been banned, you cannot sign the open letter.</p>\n\n";
+		echo "<p>Your IP ({$_SERVER['REMOTE_ADDR']}) is not valid or it has been banned, you cannot send a message.</p>\n\n";
 		exit(include('footer.php'));
 	}
 
 	// check to make sure it's not a known bot 
 	checkBots();
 	
-	// check for links before we clean up so they don't get removed with strip_tags
-	if (isset($allowlinks) && $allowlinks == "no" && (substr_count($_POST['comments'], 'http://') > 0 || substr_count($_POST['comments'], 'URL=') > 0)) {
-		echo "<p>Your message contains URLs. To cut down on spam, the posting of URLs/links has been disabled. \n</p>";
-		exit(include('footer.php'));
+	// Convert any links to plain text placeholders so nothing clickable is stored
+	if (isset($_POST['comments'])) {
+		$_POST['comments'] = strip_links_to_text($_POST['comments']);
 	}
 	
 	// prepare spam words
@@ -111,9 +119,9 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 		$points += 2;
 	if (preg_match("/(<.*>)/i", $_POST['comments'])) # html in a comment is a good indicator of spam
 		$points += 2;
-	if (strlen($_POST['name']) < 3 || strlen($_POST['name']) > 12)
+	if (strlen($_POST['name']) < 3 || strlen($_POST['name']) > 40)
 		$points += 1;
-	if (strlen($_POST['comments']) < 15 || strlen($_POST['comments'] > 1500))
+	if (strlen($_POST['comments']) < 15 || strlen($_POST['comments']) > 1500)
 		$points += 2;
 	if (preg_match("/[bcdfghjklmnpqrstvwxyz]{7,}/i", $_POST['comments'])) # comments containing 7 or more consonants in a row is normally gibberish spam
 		$points += 1;
@@ -124,8 +132,8 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 		$error_msg .= "The name field must not be blank, must not contain special characters.\r\n";
 	if (!empty($_POST['email']) && !preg_match('/^([a-z0-9])(([-a-z0-9._\+])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+' . '(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/i', strtolower($_POST['email'])))
 		$error_msg .= "That is not a valid e-mail address.\r\n";
-	if (!empty($_POST['url']) && $_POST['url'] != 'http://' && !preg_match('/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i', $_POST['url']))
-		$error_msg .= "Invalid website url.\r\n";
+	if (!empty($_POST['location']) && strlen($_POST['location']) > 60)
+		$error_msg .= "Location is too long (60 chars max).\r\n";
 	if (empty($_POST['comments']) || strlen($_POST['comments']) < 10)
 		$error_msg .= "Your comment is too short.";
 	
@@ -139,17 +147,18 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 		// let's make the data look nice and pretty
 		$c['name'] = ucwords(strtolower($c['name']));
 		$c['email'] = strtolower($c['email']);
-		$c['comments'] = str_replace("<br /><br /><br /><br />", "<br /><br />", preg_replace("/,(?! )/", ", ", preg_replace("([\r\n])", "<br />", $c['comments'])));
+		$c['location'] = isset($c['location']) ? str_replace(",", " ", trim($c['location'])) : '';
+		$c['comments'] = strip_links_to_text(str_replace("<br /><br /><br /><br />", "<br /><br />", preg_replace("/,(?! )/", ", ", preg_replace("([\r\n])", "<br />", $c['comments']))));
 		$c['comments'] = str_replace("\"","'", $c['comments']); // double quotes trip things up - replace with single
 		
 		$signdate = date("Y-m-d H:i:s");
 
 		if ($emailentries == "yes") {
-			$subject = "New entry in open letter ($title)";
+			$subject = "New message for Timotheus ($title)";
 
 			$message  = "Name: ".$c['name']." \r\n";
 			$message .= "E-mail: ".$c['email']." \r\n";
-			$message .= "Website: ".$c['url']." \r\n";
+			$message .= "Location: ".$c['location']." \r\n";
 			$message .= "Comments: ".$c['comments']." \r\n";
 			$message .= "Signed: ".date($dateformat, strtotime($signdate))." \r\n\r\n";
 			$message .= "-- ADMIN INFO -- \r\n";
@@ -159,13 +168,13 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 			$message .= "Spam points: ".$points." \r\n";
 			$message .= "Admin Panel: ".$admin_gburl."/admin.php \r\n";
 
-			if ($moderate == "yes") $message .= "\r\nYou will need to approve this entry for it to appear in your open letter.";
+			if ($moderate == "yes") $message .= "\r\nYou will need to approve this message before it appears.";
 
-			$headers = "From: ".$title." <$admin_email> \r\nReply-To: <$email>";
+			$headers = "From: ".$title." <$admin_email> \r\nReply-To: <".$c['email'].">";
 			mail($admin_email,$subject,$message,$headers);
 		}
 
-		$entryformat = $c['name'].",".breakEmail($c['email']).",".$c['url'].",".$signdate.",".$_SERVER['REMOTE_ADDR'].',"'.$c['comments'].'"'."\r\n";
+		$entryformat = $c['name'].",".breakEmail($c['email']).",".$c['location'].",".$signdate.",".$_SERVER['REMOTE_ADDR'].',"'.$c['comments'].'"'."\r\n";
 
 		if ($moderate == "yes") sign_gbook(TEMPENTRIES, $entryformat);
 		else sign_gbook(ENTRIES, $entryformat);
@@ -185,7 +194,7 @@ if (!isset($_POST['submit']) || $show_form == true) {
 	}
 ?>
 
-<p>Fill in your details in the form below. No HTML allowed.</p>
+<p>Share a short, encouraging message. Emails are optional and never shown. Links will be converted to plain text.</p>
 
 <?php
 	if ($error_msg != NULL) {
@@ -193,15 +202,15 @@ if (!isset($_POST['submit']) || $show_form == true) {
 	}
 ?>
 
-<form action="sign.php" method="post">
+<form action="sign.php" method="post" id="form">
 <p class="hidden">
 	<input type="checkbox" name="human" id="human" /> <label for="human">Leave this unticked if you're human :)</label>
 </p>
 <p>
-	<input type="text" name="name" id="name" value="<?php get_data("name"); ?>" /> <label for="name">Name</label> <br />
+	<input type="text" name="name" id="name" value="<?php get_data("name"); ?>" /> <label for="name">Name (or initials)</label> <br />
 	<input type="text" name="email" id="email" value="<?php get_data("email"); ?>" /> <label for="email">E-mail</label> <?php echo $req . $disp; ?><br />
-	<input type="text" name="url" id="url" value="http://" /> <label for="url">Website URL</label> <br />
-	<textarea name="comments" id="comments"><?php get_data("comments"); ?></textarea> <label for="comments">Comments</label> <br />
+	<input type="text" name="location" id="location" value="<?php get_data("location"); ?>" /> <label for="location">Location (city/region)</label> <br />
+	<textarea name="comments" id="comments"><?php get_data("comments"); ?></textarea> <label for="comments">Message</label> <br />
 	<?php if (isset($captcha) && $captcha == "yes") { ?>
 	<img src="captcha.php" alt="" style="margin-bottom: 2px;" /><br />
 	<input type="text" name="captcha" id="captcha" /> <label for="captcha">Numbers in Image</label> <br />

@@ -106,10 +106,10 @@ function sign_gbook($file, $entry) {
 	doWrite($file, $entry, "w"); // write the new data
 	doWrite($file, $oldData, "a"); // append the old data
 
-	echo "<p>Thank you for signing the open letter.</p>";
+	echo "<p>Thank you for sending a message for Timotheus.</p>";
 
 	if ($file === TEMPENTRIES)
-		echo "<p>Moderation is enabled, the open letter owner will have to approve your message before it appears. This may take a few days, so check back later.</p>";
+		echo "<p>Moderation is enabled. Messages are reviewed before delivery and may take time to appear.</p>";
 }
 
 function emoticonise($message) {

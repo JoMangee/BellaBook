@@ -62,11 +62,11 @@ if (isset($_COOKIE['bellabook'])) {
 				$csrf_token = hash('sha256', $_SESSION['csrf_token'].$secret);
 				
 				while ($i < $end) {
-					list($name,$email,$url,$date,$ip,$message) = preg_split("/,(?! )/", $entries[$i]);
-					
+					list($name,$email,$location,$date,$ip,$message) = preg_split("/,(?! )/", $entries[$i]);
+				
 					$email = fixEmail($email);
 					$message = trim(stripslashes($message), "\"\x00..\x1F");
-					$sitename = str_replace('www.', '', str_replace('http://', '', $url));
+					$location = trim(stripslashes($location), "\"\x00..\x1F");
 ?>
 					<tr>
 						<td>
@@ -74,7 +74,7 @@ if (isset($_COOKIE['bellabook'])) {
 
 							<strong>Name:</strong> <?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?><br>
 							<strong>E-mail:</strong> <a href="mailto:<?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?></a><br>
-							<strong>www:</strong> <a href="<?php echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($sitename, ENT_QUOTES, 'UTF-8'); ?></a><br>
+							<?php if (!empty($location)) : ?><strong>Location:</strong> <?php echo htmlspecialchars($location, ENT_QUOTES, 'UTF-8'); ?><br><?php endif; ?>
 							<strong>Date:</strong> <?php echo htmlspecialchars(date($dateformat, strtotime($date)), ENT_QUOTES, 'UTF-8'); ?><br>
 							<strong>IP:</strong> <a href="http://www.geobytes.com/IpLocator.htm?GetLocation&amp;ipaddress=<?php echo urlencode($ip); ?>"><?php echo htmlspecialchars($ip, ENT_QUOTES, 'UTF-8'); ?></a><br>
 							<br>

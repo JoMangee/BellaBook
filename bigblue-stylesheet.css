@@ -1,6 +1,7 @@
 body {
-background: #ccddee;
-font: 71%/1.3 "Lucida Grande", Verdana, Tahoma, "Trebuchet Ms", Sans-Serif;
+background: #f5f7fa;
+color: #1f2a44;
+font: 71%/1.4 "Lucida Grande", Verdana, Tahoma, "Trebuchet Ms", Sans-Serif;
 text-align: center;
 }
 
@@ -44,11 +45,42 @@ width: 80px;
 
 #container {
 background: #fff;
-border: 1px solid #99A4AF;
-width: 600px;
-padding: 5px 25px;
+border: 1px solid #c7d4e8;
+width: 760px;
+max-width: 95%;
+padding: 18px 28px;
 margin: 30px auto;
 text-align: left;
+box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.site-title {
+margin: 0 0 6px;
+color: #1f4b99;
+}
+
+.lede {
+margin: 0 0 15px;
+color: #2d3b52;
+}
+
+.guidelines {
+background: #e9eef7;
+border: 1px solid #c7d4e8;
+padding: 10px 14px;
+margin: 0 0 15px;
+}
+.guidelines h2 {
+margin: 0 0 8px;
+font-size: 1.1em;
+color: #1f4b99;
+}
+.guidelines ul {
+margin: 0 0 0 16px;
+padding: 0;
+}
+.guidelines li {
+margin-bottom: 6px;
 }
 	#topnav, #footer, .pagination {
 	margin: 0 auto;

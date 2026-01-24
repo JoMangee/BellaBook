@@ -9,32 +9,32 @@
 //-----------------------------------------------------------------------------
 
 
-$title = "My BellaBook Guestbook"; // set your guestbook title here
+$title = "Messages for Timotheus"; // guestbook title shown in <title> and header
 
 $admin_name	= "admin";   // admin username
 $admin_pass	= "password";   // admin password
-$admin_email = "youATyour-domain.com";   // admin e-mail address
-$admin_url = "http://your-website.com";   // your website url - used in guestbook footer
-$admin_gburl = "http://your-website.com/bellabook";   // your guestbook url - used in the sign notification emails
-$admin_sitename = "my site";   // your website name - used in guestbook footer
-$secret = "pleasechangeme";    // this is like a second password. you won't have to remember it, so make it long and random
+$admin_email = "contact@example.com";   // admin e-mail address
+$admin_url = "https://tim.mesh.net.nz";   // optional site url for footer context
+$admin_gburl = "https://tim.mesh.net.nz/eprn-guestbook";   // guestbook url used in notifications
+$admin_sitename = "Messages for Timotheus";   // footer/site name
+$secret = "pleasechangeme";    // long random string acts as second factor for auth
 
-$dateformat	= "d M y h:ia";   // date format, more details: php.net/date
-$stylecolor	= "bigblue";   // bellabook theme (download more from jemjabella.co.uk/scripts)
+$dateformat	= "d M Y h:ia";   // date format, more details: php.net/date
+$stylecolor	= "bigblue";   // theme file prefix (bigblue-stylesheet.css)
 
-$showwebsites = "no";  // hide websites to reduce spam links - write yes or no
-$showemail = "yes";   // show email addresses in guestbook - write yes or no
-$emailentries = "no";   // email new entries - write yes or no ($admin_email must be filled in, above)
+$showwebsites = "no";  // unused for this fork; locations are always shown when provided
+$showemail = "no";   // never show sender emails on the public page
+$emailentries = "no";   // set to yes if you want email notifications to admin
 
-$emailrequired = "yes";   // make email field required - write yes or no
-$perpage = "5";   // Pagination - amount of entries per page. 
-$smilies = "yes";   // convert text smilies like :) to images? - write yes or no
+$emailrequired = "no";   // email optional; reduces PII
+$perpage = "10";   // entries per page
+$smilies = "no";   // keep messages plain text
 
 // spam protection options
 $captcha = "no";   // captcha on? - write yes or no
-$moderate = "no";   // new entries have to be approved first - write yes or no
-$floodcontrol = "no";   // allow flood control? - write yes or no
-$allowlinks = "no";   // allow urls in comment; choosing no cuts down on spam
-$maxPoints = 4; // max points a person can hit before it refuses to submit - recommend 4
+$moderate = "yes";   // new entries must be approved before display
+$floodcontrol = "yes";   // prevent back-to-back posts from same IP
+$allowlinks = "yes";   // links will be stripped to plain text before saving
+$maxPoints = 4; // max points before rejecting as spam
 
 ?>

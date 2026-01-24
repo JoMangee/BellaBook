@@ -24,7 +24,7 @@ if(!fopen(ENTRIES, "r")) {
 		$numpages = ceil($count/$perpage);
 		if (isset($_GET['page']) && is_numeric($_GET['page'])) $pg = $_GET['page']; else $pg = 1;
 		
-		echo '<p class="pagination">'.$count.' entries<br />';
+		echo '<p class="pagination">'.$count.' messages<br />';
 		if ($perpage < $count) {
 			if ($pg > 1 && $pg <= $numpages) {
 				$prev = $pg - 1;
@@ -52,17 +52,19 @@ if(!fopen(ENTRIES, "r")) {
 
 		if ($end > $count) $end = $count;
 ?>
-		<table id="entries">
+		<div id="messages"></div>
+		<table id="entries" aria-label="Messages" >
 <?php
 		while ($i<$end){
-			list($name,$email,$url,$odate,$ip,$message) = preg_split("/,(?! )/",$entries[$i]);
+			list($name,$email,$location,$odate,$ip,$message) = preg_split("/,(?! )/",$entries[$i]);
 			
 			$date = date($dateformat, strtotime($odate));
 			$message = trim(stripslashes($message), "\"\x00..\x1F");
+			$location = trim(stripslashes($location), "\"\x00..\x1F");
 			
 			// Security: Escape output to prevent XSS
 			$name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
-			$url_safe = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+			$location_safe = htmlspecialchars($location, ENT_QUOTES, 'UTF-8');
 			
 			if ($showemail == "yes") {
 				// this bit of javascript prevents the email address being picked up by bots... in theory
@@ -76,7 +78,6 @@ if(!fopen(ENTRIES, "r")) {
 			} else {
 				$email = NULL;
 			}
-			if (empty($url) || $url == "http://") $url = "n/a"; else $url = "<a href=\"".$url_safe."\" title=\"".$name."'s website\">www</a>";
 			$rowColour = $i % 2;
 ?>
 
@@ -84,7 +85,7 @@ if(!fopen(ENTRIES, "r")) {
 				<td class="meta">
 					<img src="user.gif" alt="" /> <span class="bold">Name:</span> <?php echo $name; ?><br />
 					<?php echo $email; ?>
-					<?php if ($showwebsites == "yes") { ?><img src="www.gif" alt="" /> <span class="bold">Website:</span> <?php echo $url; ?><br /><?php } ?>
+					<?php if (!empty($location_safe)) { ?><img src="date.gif" alt="" /> <span class="bold">Location:</span> <?php echo $location_safe; ?><br /><?php } ?>
 					<img src="date.gif" alt="" /> <span class="bold">Date:</span> <?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?><br />
 				</td>
 				<td>
@@ -98,7 +99,7 @@ if(!fopen(ENTRIES, "r")) {
 		</table>
 <?php
 	} else { 
-		echo "<p>No entries have been made yet!</p> "; 
+		echo "<p>No messages have been posted yet.</p> "; 
 	}
 }
 @include('footer.php'); ?>
